@@ -1,18 +1,17 @@
 import java.util.List;
 import java.util.Random;
-import java.util.concurrent.BlockingQueue;
 
 public class Atendente implements Runnable {
 
-    public static final double SERVICO_MIN_S = 30;
-    public static final double SERVICO_MAX_S = 120;
+    public static final double ServicoMin = 30;
+    public static final double ServicoMax = 120;
 
-    private final BlockingQueue<Cliente> fila;
+    private final FilaClientes fila;
     private final RelogioSimulado relogio;
     private final List<RegistroAtendimento> registros;
     private final Random random;
 
-    public Atendente(BlockingQueue<Cliente> fila, RelogioSimulado relogio,
+    public Atendente(FilaClientes fila, RelogioSimulado relogio,
                       List<RegistroAtendimento> registros, long seed) {
         this.fila = fila;
         this.relogio = relogio;
@@ -23,12 +22,10 @@ public class Atendente implements Runnable {
     @Override
     public void run() {
         try {
-            while (true) {
-                Cliente cliente = fila.take();
-                if (cliente.getId() == -1) break; 
-
+            Cliente cliente;
+            while ((cliente = fila.retirarCliente()) != null) {
                 double inicio = relogio.tempoAtual();
-                double duracao = SERVICO_MIN_S + random.nextDouble() * (SERVICO_MAX_S - SERVICO_MIN_S);
+                double duracao = ServicoMin + random.nextDouble() * (ServicoMax - ServicoMin);
                 relogio.dormir(duracao);
                 double fim = relogio.tempoAtual();
 

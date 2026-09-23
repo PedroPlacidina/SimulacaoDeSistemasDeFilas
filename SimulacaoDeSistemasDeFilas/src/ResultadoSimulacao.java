@@ -26,17 +26,4 @@ public class ResultadoSimulacao {
         this.leadTimeMedio = leadTimeMedio;
         this.percentualDentroMeta = percentualDentroMeta;
     }
-
-    public String toCsvLine() {
-        return String.format(java.util.Locale.US,
-                "%d,%d,%d,%d,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f",
-                numeroAtendentes, replicacao, clientesGerados, clientesAtendidos,
-                esperaMedia, esperaMaxima, atendimentoMedio, atendimentoMaximo,
-                leadTimeMedio, percentualDentroMeta);
-    }
-
-    public static String cabecalhoCsv() {
-        return "n_atendentes,replicacao,clientes_gerados,clientes_atendidos,espera_media_s,espera_maxima_s,"
-                + "atendimento_medio_s,atendimento_maximo_s,lead_time_medio_s,pct_dentro_meta";
-    }
 }

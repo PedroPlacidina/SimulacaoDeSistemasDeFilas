@@ -1,11 +1,10 @@
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
+
 public class Simulador {
 
-    public static final double META_ESPERA_S = 120.0; 
+    public static final double MetaEspera = 120.0;
 
     private final double escalaMsPorSegundoSimulado;
 
@@ -14,11 +13,11 @@ public class Simulador {
     }
 
     public ResultadoSimulacao executar(int numeroAtendentes, int replicacao, long seedBase) throws InterruptedException {
-        BlockingQueue<Cliente> fila = new LinkedBlockingQueue<>();
+        FilaClientes fila = new FilaClientes();
         List<RegistroAtendimento> registros = Collections.synchronizedList(new ArrayList<>());
         RelogioSimulado relogio = new RelogioSimulado(escalaMsPorSegundoSimulado);
 
-        GeradorClientes gerador = new GeradorClientes(fila, relogio, numeroAtendentes, seedBase);
+        GeradorClientes gerador = new GeradorClientes(fila, relogio, seedBase);
         Thread threadGerador = new Thread(gerador, "Gerador");
 
         Thread[] atendentes = new Thread[numeroAtendentes];
@@ -52,7 +51,7 @@ public class Simulador {
             somaLead += r.leadTime();
             if (espera > maxEspera) maxEspera = espera;
             if (atendimento > maxAtendimento) maxAtendimento = atendimento;
-            if (espera <= META_ESPERA_S) dentroMeta++;
+            if (espera <= MetaEspera) dentroMeta++;
         }
 
         double esperaMedia = atendidos > 0 ? somaEspera / atendidos : 0;
